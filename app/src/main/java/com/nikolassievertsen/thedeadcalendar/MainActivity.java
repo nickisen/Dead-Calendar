@@ -1,7 +1,7 @@
 package com.nikolassievertsen.thedeadcalendar;
 
 import android.content.Intent;
-import android.content.SharedPreferences; // Importieren
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -11,12 +11,15 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat; // WICHTIG: Import für SwitchCompat
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList; // Import für ArrayList
+import java.util.Collections; // Import für Collections
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,14 +27,20 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spinnerGender;
     private Spinner spinnerCountry;
     private Button btnCalculate;
+    // --- NEUE UI ELEMENTE ---
+    private SwitchCompat switchSmoker;
+    private SwitchCompat switchDrinker;
+    private SwitchCompat switchOverweight;
 
     // --- SharedPreferences Konstanten ---
-    // Name unserer Speicher-Datei
     public static final String PREFS_NAME = "DeadCalendarPrefs";
-    // Schlüssel für die einzelnen Werte
     public static final String KEY_BIRTHDAY = "birthday_iso_string";
     public static final String KEY_GENDER = "gender_string";
     public static final String KEY_COUNTRY = "country_string";
+    // --- NEUE SPEICHER-SCHLÜSSEL ---
+    public static final String KEY_SMOKER = "is_smoker";
+    public static final String KEY_DRINKER = "is_drinker";
+    public static final String KEY_OVERWEIGHT = "is_overweight";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,22 +52,22 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedBirthday != null) {
             // DATEN GEFUNDEN: Dashboard direkt starten
-            String savedGender = prefs.getString(KEY_GENDER, "Männlich"); // Standard-Fallback
-            String savedCountry = prefs.getString(KEY_COUNTRY, "Welt (Durchschnitt)"); // Standard-Fallback
+            String savedGender = prefs.getString(KEY_GENDER, "Männlich");
+            String savedCountry = prefs.getString(KEY_COUNTRY, "Welt (Durchschnitt)");
+            // Lifestyle-Daten laden
+            boolean isSmoker = prefs.getBoolean(KEY_SMOKER, false);
+            boolean isDrinker = prefs.getBoolean(KEY_DRINKER, false);
+            boolean isOverweight = prefs.getBoolean(KEY_OVERWEIGHT, false);
 
-            // Daten parsen (String -> LocalDate)
             LocalDate birthday = LocalDate.parse(savedBirthday);
 
-            // Berechnung und Start des Dashboards
-            launchDashboardAndFinish(birthday, savedGender, savedCountry);
+            // Berechnung und Start des Dashboards (mit Lifestyle-Daten)
+            launchDashboardAndFinish(birthday, savedGender, savedCountry, isSmoker, isDrinker, isOverweight);
 
-            // WICHTIG: return, damit der Rest von onCreate (das Anzeigen der Eingabemaske)
-            // nicht ausgeführt wird.
             return;
         }
 
         // --- 2. KEINE DATEN GEFUNDEN: Eingabemaske anzeigen ---
-        // (Dieser Code wird nur erreicht, wenn savedBirthday == null ist)
         setContentView(R.layout.activity_main);
 
         // UI-Elemente initialisieren
@@ -66,15 +75,18 @@ public class MainActivity extends AppCompatActivity {
         spinnerGender = findViewById(R.id.spinnerGender);
         spinnerCountry = findViewById(R.id.spinnerCountry);
         btnCalculate = findViewById(R.id.btnCalculate);
+        // Neue UI-Elemente
+        switchSmoker = findViewById(R.id.switchSmoker);
+        switchDrinker = findViewById(R.id.switchDrinker);
+        switchOverweight = findViewById(R.id.switchOverweight);
 
-        // ----- SPINNER SETUP -----
+        // Spinner Setup
         setupSpinners();
 
-        // ----- BUTTON CLICK LISTENER -----
+        // Button Click Listener
         btnCalculate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Daten aus UI auslesen, speichern und Dashboard starten
                 readAndSaveData();
             }
         });
@@ -88,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Richtet die Adapter für die Spinner ein.
+     * Richtet die Adapter für die Spinner ein (jetzt sortiert).
      */
     private void setupSpinners() {
         // 1. Geschlecht-Spinner
@@ -97,29 +109,40 @@ public class MainActivity extends AppCompatActivity {
         genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerGender.setAdapter(genderAdapter);
 
-        // 2. Länder-Spinner
-        String[] countries = LifeExpectancyData.getAvailableCountries();
+        // 2. Länder-Spinner (jetzt sortiert)
+        // Holen der Länder als Set und Umwandeln in eine sortierte Liste
+        ArrayList<String> countryList = new ArrayList<>(LifeExpectancyData.getAvailableCountries());
+        Collections.sort(countryList); // Sortiert die Liste alphabetisch
+
         ArrayAdapter<String> countryAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, countries);
+                android.R.layout.simple_spinner_item, countryList);
         countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCountry.setAdapter(countryAdapter);
+
+        // "Welt (Durchschnitt)" als Standard auswählen, falls vorhanden
+        int defaultPosition = countryList.indexOf("Welt (Durchschnitt)");
+        if (defaultPosition >= 0) {
+            spinnerCountry.setSelection(defaultPosition);
+        }
     }
 
     /**
      * Liest Daten aus der UI, speichert sie in SharedPreferences und startet das Dashboard.
      */
     private void readAndSaveData() {
-        // 1. Geburtstag auslesen
+        // 1. Basis-Daten auslesen
         int day = datePickerBirthday.getDayOfMonth();
-        int month = datePickerBirthday.getMonth() + 1; // Monate sind 0-basiert
+        int month = datePickerBirthday.getMonth() + 1;
         int year = datePickerBirthday.getYear();
         LocalDate birthday = LocalDate.of(year, month, day);
 
-        // 2. Geschlecht auslesen
         String genderString = spinnerGender.getSelectedItem().toString();
-
-        // 3. Land auslesen
         String country = spinnerCountry.getSelectedItem().toString();
+
+        // 2. NEUE Lifestyle-Daten auslesen
+        boolean isSmoker = switchSmoker.isChecked();
+        boolean isDrinker = switchDrinker.isChecked();
+        boolean isOverweight = switchOverweight.isChecked();
 
         // Prüfen, ob der Geburtstag in der Zukunft liegt
         if (birthday.isAfter(LocalDate.now())) {
@@ -127,39 +150,49 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // --- 4. DATEN SPEICHERN ---
+        // --- 3. DATEN SPEICHERN ---
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        // Wir speichern das Geburtsdatum als ISO-String (z.B. "1990-05-20")
         editor.putString(KEY_BIRTHDAY, birthday.toString());
         editor.putString(KEY_GENDER, genderString);
         editor.putString(KEY_COUNTRY, country);
-        editor.apply(); // Speichern (asynchron)
+        // Neue Daten speichern
+        editor.putBoolean(KEY_SMOKER, isSmoker);
+        editor.putBoolean(KEY_DRINKER, isDrinker);
+        editor.putBoolean(KEY_OVERWEIGHT, isOverweight);
+        editor.apply();
 
-        // --- 5. BERECHNEN UND DASHBOARD STARTEN ---
-        launchDashboardAndFinish(birthday, genderString, country);
+        // --- 4. BERECHNEN UND DASHBOARD STARTEN ---
+        launchDashboardAndFinish(birthday, genderString, country, isSmoker, isDrinker, isOverweight);
     }
 
     /**
-     * Nimmt die Eingabedaten, berechnet die Werte, startet die DashboardActivity
-     * und beendet die MainActivity.
+     * Nimmt ALLE Eingabedaten, berechnet die Werte und startet die DashboardActivity.
      */
-    private void launchDashboardAndFinish(LocalDate birthday, String genderString, String country) {
+    private void launchDashboardAndFinish(LocalDate birthday, String genderString, String country,
+                                          boolean isSmoker, boolean isDrinker, boolean isOverweight) {
+
         // 1. Geschlecht parsen
         LifeExpectancyData.Gender gender = genderString.equals("Männlich") ?
                 LifeExpectancyData.Gender.MALE : LifeExpectancyData.Gender.FEMALE;
 
-        // 2. Lebenserwartung abrufen
-        double lifeExpectancyInYears = LifeExpectancyData.getLifeExpectancy(country, gender);
+        // 2. Basis-Lebenserwartung abrufen
+        double baseLifeExpectancy = LifeExpectancyData.getLifeExpectancy(country, gender);
 
-        // 3. Lebensdaten berechnen (wird JEDES MAL neu berechnet)
+        // --- 3. NEUE BERECHNUNG: Lifestyle-Abzüge holen ---
+        double lifestylePenaltyInYears = LifeExpectancyData.getLifestylePenalty(isSmoker, isDrinker, isOverweight);
+
+        // Endgültige Lebenserwartung berechnen
+        double finalLifeExpectancyInYears = baseLifeExpectancy - lifestylePenaltyInYears;
+
+        // 4. Lebensdaten berechnen
         LocalDate today = LocalDate.now();
-        long totalLifeSpanInDays = (long) (lifeExpectancyInYears * 365.25);
+        long totalLifeSpanInDays = (long) (finalLifeExpectancyInYears * 365.25);
         LocalDate expectedDeathDate = birthday.plusDays(totalLifeSpanInDays);
         long daysPassed = ChronoUnit.DAYS.between(birthday, today);
         long daysRemaining = ChronoUnit.DAYS.between(today, expectedDeathDate);
 
-        // 4. Intent erstellen und Daten übergeben
+        // 5. Intent erstellen und Daten übergeben
         Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
         intent.putExtra("TOTAL_DAYS", totalLifeSpanInDays);
         intent.putExtra("DAYS_PASSED", daysPassed);
@@ -168,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
         startActivity(intent);
 
-        // 5. Diese Activity (MainActivity) beenden
+        // 6. Diese Activity (MainActivity) beenden
         finish();
     }
 }

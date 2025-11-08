@@ -1,63 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:gravity="center_horizontal"
-    tools:context=".MainActivity">
+    android:fillViewport="true">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Wann wurdest du geboren?"
-        android:textSize="18sp"
-        android:layout_marginBottom="16dp"/>
-
-    <DatePicker
-        android:id="@+id/datePickerBirthday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:calendarViewShown="false"
-        android:datePickerMode="spinner"
-        android:layout_marginBottom="24dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Wähle dein Geschlecht:"
-        android:textSize="16sp"/>
-
-    <Spinner
-        android:id="@+id/spinnerGender"
+    <LinearLayout
+        android:id="@+id/main"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginBottom="24dp"
-        android:padding="8dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Wähle dein Herkunftsland:"
-        android:textSize="16sp"/>
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="24dp"
+        tools:context=".MainActivity">
 
-    <Spinner
-        android:id="@+id/spinnerCountry"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginBottom="32dp"
-        android:padding="8dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wann wurdest du geboren?"
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp"/>
 
-    <Button
-        android:id="@+id/btnCalculate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mein Leben berechnen"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"/>
+        <DatePicker
+            android:id="@+id/datePickerBirthday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:calendarViewShown="false"
+            android:datePickerMode="spinner"
+            android:layout_marginBottom="24dp"/>
 
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wähle dein Geschlecht:"
+            android:textSize="16sp"/>
+
+        <Spinner
+            android:id="@+id/spinnerGender"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="24dp"
+            android:padding="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wähle dein Herkunftsland:"
+            android:textSize="16sp"/>
+
+        <Spinner
+            android:id="@+id/spinnerCountry"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="24dp"
+            android:padding="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dein Lebensstil:"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp"/>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchSmoker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Rauchst du regelmäßig?" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchDrinker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Trinkst du stark/regelmäßig Alkohol?" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchOverweight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Bist du stark übergewichtig (BMI > 30)?"
+            android:layout_marginBottom="32dp"/>
+
+
+        <Button
+            android:id="@+id/btnCalculate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mein Leben berechnen"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"/>
+
+    </LinearLayout>
+</ScrollView>

@@ -1,10 +1,28 @@
 <resources>
-    <string name="app_name">The Dead Calendar</string>
-    <string-array name="gender_array">
-        <item>Männlich</item>
-        <item>Weiblich</item>
-    </string-array>
+    <string name="app_name">Dead Calendar</string>
 
     <string name="title_timer">Timer</string>
-    <string name="title_calendar">Kalender</string>
+    <string name="title_calendar">Calendar</string>
+
+    <string-array name="gender_array">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
+    <string name="input_title_birthday">When were you born?</string>
+    <string name="input_title_gender">Select your gender:</string>
+    <string name="input_title_country">Select your country of origin:</string>
+    <string name="input_title_lifestyle">Your Lifestyle:</string>
+    <string name="input_switch_smoker">Do you smoke regularly?</string>
+    <string name="input_switch_drinker">Do you drink alcohol heavily/regularly?</string>
+    <string name="input_switch_overweight">Are you significantly overweight (BMI > 30)?</string>
+    <string name="input_button_calculate">Calculate My Life</string>
+    <string name="input_toast_birthday_future">Please select a birth date in the past.</string>
+
+    <string name="timer_title">YOUR REMAINING TIME</string>
+    <string name="timer_subtitle">YOUR LIFE SO FAR</string>
+    <string name="timer_countdown_format">%d years, %d months, %d days, %02d sec</string>
+    <string name="timer_countdown_finished">Time is up</string>
+
+    <string name="calendar_title">YOUR LIFE IN WEEKS</string>
 </resources>

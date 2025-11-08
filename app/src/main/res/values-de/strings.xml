@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dead Calendar</string>
+
+    <string name="title_timer">Timer</string>
+    <string name="title_calendar">Kalender</string>
+
+    <string-array name="gender_array">
+        <item>Männlich</item>
+        <item>Weiblich</item>
+    </string-array>
+
+    <string name="input_title_birthday">Wann wurdest du geboren?</string>
+    <string name="input_title_gender">Wähle dein Geschlecht:</string>
+    <string name="input_title_country">Wähle dein Herkunftsland:</string>
+    <string name="input_title_lifestyle">Dein Lebensstil:</string>
+    <string name="input_switch_smoker">Rauchst du regelmäßig?</string>
+    <string name="input_switch_drinker">Trinkst du stark/regelmäßig Alkohol?</string>
+    <string name="input_switch_overweight">Bist du stark übergewichtig (BMI > 30)?</string>
+    <string name="input_button_calculate">Mein Leben berechnen</string>
+    <string name="input_toast_birthday_future">Bitte wähle ein Geburtsdatum in der Vergangenheit.</string>
+
+    <string name="timer_title">DEINE VERBLEIBENDE ZEIT</string>
+    <string name="timer_subtitle">DEIN LEBEN BISHER</string>
+    <string name="timer_countdown_format">%d Jahre, %d Monate, %d Tage, %02d Sek</string>
+    <string name="timer_countdown_finished">Zeit abgelaufen</string>
+
+    <string name="calendar_title">DEIN LEBEN IN WOCHEN</string>
+</resources>

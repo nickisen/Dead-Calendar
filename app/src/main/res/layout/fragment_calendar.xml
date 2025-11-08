@@ -8,8 +8,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="DEIN LEBEN IN WOCHEN"
-        android:textSize="16sp"
+        android:text="@string/calendar_title" android:textSize="16sp"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"/>

@@ -32,32 +32,32 @@ public class LifeExpectancyData {
 
     static {
         // Datenquelle: Worldometer / UN-Schätzungen 2024/2025
-        data.put("Welt (Durchschnitt)", new Expectancy(70.9, 76.2));
+        // !!! WICHTIG: Alle Schlüssel sind jetzt auf Englisch !!!
+        data.put("World (Average)", new Expectancy(70.9, 76.2));
         data.put("Hong Kong", new Expectancy(83.1, 88.39));
         data.put("Japan", new Expectancy(81.99, 88.03));
-        data.put("Schweiz", new Expectancy(82.34, 86.06));
-        data.put("Südkorea", new Expectancy(81.44, 87.4));
-        data.put("Australien", new Expectancy(82.43, 85.97));
-        data.put("Italien", new Expectancy(81.94, 86.01));
-        data.put("Singapur", new Expectancy(81.53, 86.48));
-        data.put("Spanien", new Expectancy(81.27, 86.59));
-        data.put("Norwegen", new Expectancy(82.11, 85.09));
-        data.put("Schweden", new Expectancy(81.84, 85.34));
-        data.put("Frankreich", new Expectancy(80.73, 86.31));
-        data.put("Kanada", new Expectancy(80.74, 85.03));
-        data.put("Österreich", new Expectancy(79.97, 84.57));
-        data.put("Niederlande", new Expectancy(80.89, 83.98));
-        data.put("Deutschland", new Expectancy(79.42, 84.01));
+        data.put("Switzerland", new Expectancy(82.34, 86.06));
+        data.put("South Korea", new Expectancy(81.44, 87.4));
+        data.put("Australia", new Expectancy(82.43, 85.97));
+        data.put("Italy", new Expectancy(81.94, 86.01));
+        data.put("Singapore", new Expectancy(81.53, 86.48));
+        data.put("Spain", new Expectancy(81.27, 86.59));
+        data.put("Norway", new Expectancy(82.11, 85.09));
+        data.put("Sweden", new Expectancy(81.84, 85.34));
+        data.put("France", new Expectancy(80.73, 86.31));
+        data.put("Canada", new Expectancy(80.74, 85.03));
+        data.put("Austria", new Expectancy(79.97, 84.57));
+        data.put("Netherlands", new Expectancy(80.89, 83.98));
+        data.put("Germany", new Expectancy(79.42, 84.01)); // War "Deutschland"
         data.put("UK", new Expectancy(79.72, 83.45));
         data.put("USA", new Expectancy(77.22, 82.11));
         data.put("China", new Expectancy(75.65, 81.25));
-        data.put("Türkei", new Expectancy(74.94, 80.82));
-        data.put("Russland", new Expectancy(67.6, 78.2)); // (Stark abweichend je nach Quelle, Schätzung)
-        data.put("Brasilien", new Expectancy(72.7, 79.4));
-        data.put("Indien", new Expectancy(69.9, 72.9));
-        data.put("Südafrika", new Expectancy(62.3, 68.3));
+        data.put("Turkey", new Expectancy(74.94, 80.82));
+        data.put("Russia", new Expectancy(67.6, 78.2));
+        data.put("Brazil", new Expectancy(72.7, 79.4));
+        data.put("India", new Expectancy(69.9, 72.9));
+        data.put("South Africa", new Expectancy(62.3, 68.3));
         data.put("Nigeria", new Expectancy(53.8, 55.7));
-        // Füge hier nach Bedarf weitere Länder hinzu...
     }
 
     /**

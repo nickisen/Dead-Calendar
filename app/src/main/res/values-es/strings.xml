@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Calendario Muerto</string>
+    <string name="title_timer">Temporizador</string>
+    <string name="title_calendar">Calendario</string>
+    <string-array name="gender_array">
+        <item>Masculino</item>
+        <item>Femenino</item>
+    </string-array>
+    <string name="input_title_birthday">¿Cuándo naciste?</string>
+    <string name="input_title_gender">Selecciona tu género:</string>
+    <string name="input_title_country">Selecciona tu país de origen:</string>
+    <string name="input_title_lifestyle">Tu estilo de vida:</string>
+    <string name="input_switch_smoker">¿Fumas regularmente?</string>
+    <string name="input_switch_drinker">¿Bebe alcohol en exceso/regularmente?</string>
+    <string name="input_switch_overweight">¿Tiene un sobrepeso significativo (IMC > 30)?</string>
+    <string name="input_button_calculate">Calcular Mi Vida</string>
+    <string name="input_toast_birthday_future">Por favor, selecciona una fecha de nacimiento en el pasado.</string>
+    <string name="timer_title">TU TIEMPO RESTANTE</string>
+    <string name="timer_subtitle">TU VIDA HASTA AHORA</string>
+    <string name="timer_countdown_format">%d años, %d meses, %d días, %02d seg</string>
+    <string name="timer_countdown_finished">Se acabó el tiempo</string>
+    <string name="calendar_title">TU VIDA EN SEMANAS</string>
+</resources>

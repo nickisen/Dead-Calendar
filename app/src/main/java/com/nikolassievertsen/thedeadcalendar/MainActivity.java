@@ -1,22 +1,49 @@
 package com.nikolassievertsen.thedeadcalendar;
 
-// ... (alle imports bleiben gleich)
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
 
-    // ... (alle Klassenvariablen bleiben gleich)
+    // --- UI-Komponenten ---
+    private DatePicker datePickerBirthday;
+    private Spinner spinnerGender, spinnerCountry;
+    private Button btnCalculate;
+    private SwitchCompat switchSmoker, switchDrinker, switchOverweight;
 
     // --- SharedPreferences Konstanten ---
-    // ... (bleibt alles gleich, aber wir fügen KEY_GENDER_POSITION hinzu)
-    public static final String KEY_GENDER_POSITION = "gender_position"; // NEU
-    // ...
+    public static final String PREFS_NAME = "DeadCalendarPrefs";
+    public static final String KEY_BIRTHDAY = "birthday";
+    public static final String KEY_GENDER_POSITION = "gender_position"; // Speichert 0 oder 1
+    public static final String KEY_COUNTRY = "country";
+    public static final String KEY_SMOKER = "isSmoker";
+    public static final String KEY_DRINKER = "isDrinker";
+    public static final String KEY_OVERWEIGHT = "isOverweight";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Prüfen, ob bereits Daten gespeichert sind
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         String savedBirthday = prefs.getString(KEY_BIRTHDAY, null);
 
@@ -33,10 +60,10 @@ public class MainActivity extends AppCompatActivity {
             // Starte Dashboard mit der POSITION
             launchDashboardAndFinish(birthday, savedGenderPosition, savedCountry, isSmoker, isDrinker, isOverweight);
 
-            return;
+            return; // Beende onCreate, da wir direkt zur DashboardActivity springen
         }
 
-        // --- Standard onCreate (bleibt gleich) ---
+        // --- Standard onCreate (wenn keine Daten gespeichert sind) ---
         setContentView(R.layout.activity_main);
         datePickerBirthday = findViewById(R.id.datePickerBirthday);
         spinnerGender = findViewById(R.id.spinnerGender);
@@ -81,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readAndSaveData() {
-        // ... (Geburtstag auslesen bleibt gleich)
+        // Geburtstag auslesen
         LocalDate birthday = LocalDate.of(datePickerBirthday.getYear(), datePickerBirthday.getMonth() + 1, datePickerBirthday.getDayOfMonth());
 
         // --- HIER IST DER WICHTIGE FIX ---
@@ -93,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         boolean isDrinker = switchDrinker.isChecked();
         boolean isOverweight = switchOverweight.isChecked();
 
+        // Verhindere Geburtsdatum in der Zukunft
         if (birthday.isAfter(LocalDate.now())) {
             // Toast verwendet jetzt String-Ressource
             Toast.makeText(this, getString(R.string.input_toast_birthday_future), Toast.LENGTH_LONG).show();
@@ -116,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Nimmt ALLE Eingabedaten, berechnet die Werte und startet die DashboardActivity.
-     * AKZEPTIERT JETZT 'genderPosition' (int) statt 'genderString' (String)
      */
     private void launchDashboardAndFinish(LocalDate birthday, int genderPosition, String country,
                                           boolean isSmoker, boolean isDrinker, boolean isOverweight) {
@@ -128,23 +155,33 @@ public class MainActivity extends AppCompatActivity {
         // 2. Basis-Lebenserwartung abrufen (mit englischem Schlüssel)
         double baseLifeExpectancy = LifeExpectancyData.getLifeExpectancy(country, gender);
 
-        // ... (Rest der Berechnung bleibt exakt gleich)
+        // 3. Modifikatoren anwenden
         double lifestylePenaltyInYears = LifeExpectancyData.getLifestylePenalty(isSmoker, isDrinker, isOverweight);
         double finalLifeExpectancyInYears = baseLifeExpectancy - lifestylePenaltyInYears;
+
+        // 4. Tage berechnen
         LocalDate today = LocalDate.now();
         long totalLifeSpanInDays = (long) (finalLifeExpectancyInYears * 365.25);
         LocalDate expectedDeathDate = birthday.plusDays(totalLifeSpanInDays);
         long daysPassed = ChronoUnit.DAYS.between(birthday, today);
+
+        // Berechne die verbleibenden Tage von HEUTE (00:00) bis zum Todestag (00:00)
         long daysRemaining = ChronoUnit.DAYS.between(today, expectedDeathDate);
 
-        // ... (Intent erstellen bleibt exakt gleich)
+
+        // 5. Intent mit allen Daten für die Fragmente füllen
         Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
         intent.putExtra("TOTAL_DAYS", totalLifeSpanInDays);
         intent.putExtra("DAYS_PASSED", daysPassed);
         intent.putExtra("DAYS_REMAINING", daysRemaining);
         intent.putExtra("EXPECTED_DEATH_DATE_STRING", expectedDeathDate.toString());
 
+        // --- HINZUGEFÜGT ---
+        // Füge das Geburtsdatum hinzu, damit TimerFragment "Jahre/Monate/Tage vergangen" berechnen kann
+        intent.putExtra("BIRTHDAY_STRING", birthday.toString());
+        // ---------------------
+
         startActivity(intent);
-        finish();
+        finish(); // Verhindert, dass der Benutzer zur MainActivity zurückkehren kann
     }
 }

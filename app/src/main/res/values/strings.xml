@@ -21,7 +21,9 @@
 
     <string name="timer_title">YOUR REMAINING TIME</string>
     <string name="timer_subtitle">YOUR LIFE SO FAR</string>
-    <string name="timer_countdown_format">%d years, %d months, %d days, %02d sec</string>
+
+    <string name="timer_countdown_format">%d days, %d hr, %02d min, %02d sec</string>
+
     <string name="timer_countdown_finished">Time is up</string>
 
     <string name="calendar_title">YOUR LIFE IN WEEKS</string>

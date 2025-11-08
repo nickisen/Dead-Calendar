@@ -78,9 +78,12 @@ public class LifeExpectancyData {
         Expectancy expectancy = data.get(country);
         if (expectancy == null) {
             // Fallback, wenn das Land nicht in unserer Liste ist
-            expectancy = data.get("Welt (Durchschnitt)");
+            // KORRIGIERT: Verwende den englischen Schlüssel, der in den Daten vorhanden ist
+            expectancy = data.get("World (Average)");
         }
 
+        // Wir können Objects.requireNonNull hier sicher verwenden,
+        // da "World (Average)" garantiert in den Daten ist.
         if (gender == Gender.MALE) {
             return Objects.requireNonNull(expectancy).male;
         } else {

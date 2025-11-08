@@ -18,7 +18,9 @@
     <string name="input_toast_birthday_future">Por favor, selecciona una fecha de nacimiento en el pasado.</string>
     <string name="timer_title">TU TIEMPO RESTANTE</string>
     <string name="timer_subtitle">TU VIDA HASTA AHORA</string>
-    <string name="timer_countdown_format">%d años, %d meses, %d días, %02d seg</string>
+
+    <string name="timer_countdown_format">%d días, %d h, %02d min, %02d seg</string>
+
     <string name="timer_countdown_finished">Se acabó el tiempo</string>
     <string name="calendar_title">TU VIDA EN SEMANAS</string>
 </resources>
